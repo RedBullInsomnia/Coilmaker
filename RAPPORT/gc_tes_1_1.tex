@@ -1,0 +1,406 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[top=2cm, bottom=4cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{parskip}
+\usepackage{cases}
+\setlength{\parindent}{1cm}
+\usepackage{titlesec}
+\usepackage{textcomp}
+\usepackage[final]{pdfpages}
+\usepackage{float}
+\usepackage{framed}
+\usepackage{pgfplots}
+\pgfplotsset{width = 11cm}
+\newcommand{\x}{\text{ . }}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\sectionmark}[1]{\markright{\thesection \ #1}{}}
+\begin{document}
+\begin{titlepage}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{./sources/microsys.jpg}~ \\[5cm]
+\textsc{\LARGE Rapport automatique}\\[1.5cm]
+\rule{\linewidth}{0.5mm} \\[0.4cm]
+{ \huge \bfseries Bobine \verb?gc_tes_1_1? \\[0.4cm] }
+\rule{\linewidth}{0.5mm} \\[3.5cm]
+\textsc{\large \today}\\[0.5cm]
+\vfill
+\end{center}
+\end{titlepage}
+\fancyhf{}
+\lhead{\fancyplain{}{Projet: \verb?test?}} 
+\rhead{\fancyplain{}{Opérateur: \verb?gc?}}
+\lfoot{\fancyplain{}{\rightmark}}
+\rfoot{\fancyplain{}{\thepage}}
+\section{Informations sur la bobine}
+L'opération de bobinage s'est terminé avec succès le \today.
+ 
+Le coût en cuivre est estimé à 0.0 euros.
+ 
+ 
+\begin{tabular}{ll}
+Statut de la bobine: & Terminé \\ 
+Opérateur: & \verb?gc? \\ 
+Nom du projet: & \verb?test? \\ 
+Type de bobine: & \verb?1? \\ 
+Numéro de la bobine: & \verb?1? \\ 
+ID bobine: & \verb?gc_tes_1_1? \\ 
+Diamètre du fil: & 30 um \\ 
+Diamètre du noyau: & 10 mm \\ 
+Longueur de la bobine: & 10 mm \\ 
+Nombre de tours total: & 0.0 spires \\ 
+Nombre de couches total: & 1 couches \\ 
+Temps total: & 22.16 s \\ 
+Temps hors pause: & 22.16 s \\ 
+Interruption à : & 25 \\ 
+\end{tabular}
+\clearpage
+\section{Vitesse}
+La vitesse du mandrin est mesurée par le compte-tours. Cette valeur est indicative.
+ 
+\begin{tikzpicture}
+\begin{axis}[xlabel = temps écoulé (secondes),ylabel = vitesse de rotation (RPM) ,no markers,legend style={at={(1.02,1)},legend,anchor=north west }]
+\addplot table [x=time, y=speed, col sep=semicolon]{gc_tes_1_1.csv};
+\addplot table [x=time, y=speedC, col sep=semicolon]{gc_tes_1_1.csv};
+\legend{Mandrin, Consigne}
+\end{axis}
+\end{tikzpicture}
+\section{Avance}
+Consigne de la vitesse d'avance (en $\mu$m par tour de mandrin)
+ 
+\begin{tikzpicture}
+\begin{axis}[xlabel = temps écoulé (secondes),ylabel = avance ($\mu$m/spire) ,no markers,legend style={at={(1.02,1)},legend,anchor=north west }]
+\addplot table [x=time, y=avance, col sep=semicolon]{gc_tes_1_1.csv};
+\legend{avance}
+\end{axis}
+\end{tikzpicture}
+\section{Sonde Hall}
+\begin{tikzpicture}
+\begin{axis}[xlabel = temps écoulé (secondes),ylabel = Tension (V) ,no markers,legend style={at={(1.02,1)},legend,anchor=north west }]
+\addplot table [x=time, y=sondeHall, col sep=semicolon]{gc_tes_1_1.csv};
+\legend{sondeHall}
+\end{axis}
+\end{tikzpicture}
+\section{Evénements survenus}
+2015-08-27 09\string:51\string:47,123 - Pression sur le bouton "START"
+
+2015-08-27 11\string:14\string:01,684 - Pression sur le bouton "START"
+
+2015-08-27 11\string:14\string:05,307 - Vitesse d'avance d'avance\string: 37.0
+
+2015-08-27 11\string:14\string:07,970 - Vitesse de rotation\string: 16.0
+
+2015-08-27 11\string:14\string:24,578 - Vitesse de rotation\string: 21.0
+
+2015-08-27 11\string:14\string:37,283 - Vitesse de rotation\string: 22.0
+
+2015-08-27 11\string:14\string:39,273 - Vitesse de rotation\string: 23.0
+
+2015-08-27 11\string:14\string:40,606 - Vitesse de rotation\string: 24.0
+
+2015-08-27 11\string:15\string:03,567 - Mise en pause automatique de la bobine
+
+2015-08-27 11\string:15\string:03,584 - Pause programmée de la bobine
+
+2015-08-27 11\string:15\string:04,866 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:15\string:31,257 - Pression sur le bouton "START"
+
+2015-08-27 11\string:15\string:31,411 - Vitesse de rotation\string: 24.0
+
+2015-08-27 11\string:16\string:08,960 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:16\string:09,315 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:16\string:09,859 - Pression sur le bouton "START"
+
+2015-08-27 11\string:16\string:10,046 - Vitesse de rotation\string: 24.0
+
+2015-08-27 11\string:16\string:32,748 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:16\string:33,276 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:16\string:33,504 - Pression sur le bouton "START"
+
+2015-08-27 11\string:16\string:33,944 - Vitesse de rotation\string: 24.0
+
+2015-08-27 11\string:18\string:03,078 - Vitesse de rotation\string: 43.0
+
+2015-08-27 11\string:18\string:03,741 - Vitesse de rotation\string: 55.0
+
+2015-08-27 11\string:18\string:04,403 - Vitesse de rotation\string: 59.0
+
+2015-08-27 11\string:18\string:05,077 - Vitesse de rotation\string: 65.0
+
+2015-08-27 11\string:18\string:05,756 - Vitesse de rotation\string: 69.0
+
+2015-08-27 11\string:18\string:06,459 - Vitesse de rotation\string: 75.0
+
+2015-08-27 11\string:18\string:18,462 - La bobine s'est terminé avec succès
+
+2015-08-27 11\string:20\string:11,198 - Pression sur le bouton "START"
+
+2015-08-27 11\string:20\string:12,151 - Vitesse d'avance d'avance\string: 36.0
+
+2015-08-27 11\string:20\string:13,012 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:20\string:13,474 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:22\string:15,951 - Pression sur le bouton "START"
+
+2015-08-27 11\string:23\string:06,198 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:23\string:06,467 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:23\string:07,483 - Pression sur le bouton "START"
+
+2015-08-27 11\string:23\string:07,812 - Vitesse de rotation\string: 10.0
+
+2015-08-27 11\string:23\string:09,200 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:23\string:09,838 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:23\string:10,512 - Pression sur le bouton "START"
+
+2015-08-27 11\string:23\string:10,519 - Vitesse de rotation\string: 10.0
+
+2015-08-27 11\string:23\string:11,760 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:23\string:11,875 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:24\string:37,823 - Pression sur le bouton "START"
+
+2015-08-27 11\string:24\string:37,854 - Vitesse de rotation\string: 10.0
+
+2015-08-27 11\string:25\string:21,880 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:25\string:22,028 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:25\string:43,272 - Pression sur le bouton "START"
+
+2015-08-27 11\string:25\string:43,501 - Vitesse de rotation\string: 10.0
+
+2015-08-27 11\string:25\string:44,250 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:25\string:44,860 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:28\string:09,632 - Pression sur le bouton "START"
+
+2015-08-27 11\string:28\string:09,810 - Vitesse de rotation\string: 10.0
+
+2015-08-27 11\string:28\string:45,478 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:28\string:45,841 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:28\string:59,039 - Pression sur le bouton "START"
+
+2015-08-27 11\string:28\string:59,238 - Vitesse de rotation\string: 10.0
+
+2015-08-27 11\string:29\string:01,229 - Vitesse de rotation\string: 15.0
+
+2015-08-27 11\string:29\string:01,895 - Vitesse de rotation\string: 17.0
+
+2015-08-27 11\string:29\string:02,565 - Vitesse de rotation\string: 19.0
+
+2015-08-27 11\string:29\string:03,241 - Vitesse de rotation\string: 37.0
+
+2015-08-27 11\string:29\string:05,233 - Vitesse de rotation\string: 58.0
+
+2015-08-27 11\string:29\string:05,898 - Vitesse d'avance d'avance\string: 37.0
+
+2015-08-27 11\string:29\string:06,561 - Vitesse d'avance d'avance\string: 40.0
+
+2015-08-27 11\string:29\string:15,802 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:29\string:15,870 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:29\string:16,671 - Pression sur le bouton "START"
+
+2015-08-27 11\string:29\string:17,195 - Vitesse de rotation\string: 58.0
+
+2015-08-27 11\string:31\string:31,676 - Pression sur le bouton "START"
+
+2015-08-27 11\string:34\string:06,134 - Mise en pause automatique de la bobine
+
+2015-08-27 11\string:34\string:06,136 - Pause programmée de la bobine
+
+2015-08-27 11\string:34\string:07,138 - Vitesse de rotation\string: 0.0
+
+2015-08-27 12\string:02\string:53,997 - Pression sur le bouton "START"
+
+2015-08-27 12\string:04\string:13,794 - Pression sur le bouton "PAUSE"
+
+2015-08-27 12\string:04\string:14,332 - Pression sur le bouton "START"
+
+2015-08-27 12\string:04\string:21,032 - Vitesse d'avance d'avance\string: 40.0
+
+2015-08-27 12\string:04\string:25,684 - Vitesse de rotation\string: 21.0
+
+2015-08-27 12\string:04\string:26,353 - Vitesse de rotation\string: 53.0
+
+2015-08-27 12\string:04\string:27,030 - Vitesse de rotation\string: 74.0
+
+2015-08-27 12\string:04\string:27,706 - Vitesse de rotation\string: 76.0
+
+2015-08-27 12\string:04\string:37,240 - Mise en pause automatique de la bobine
+
+2015-08-27 12\string:04\string:37,260 - Pause programmée de la bobine
+
+2015-08-27 12\string:04\string:38,634 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:25\string:03,259 - Pression sur le bouton "START"
+
+2015-08-27 11\string:25\string:15,517 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:25\string:16,183 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:25\string:17,069 - Pression sur le bouton "START"
+
+2015-08-27 11\string:25\string:17,526 - Vitesse de rotation\string: 10.0
+
+2015-08-27 11\string:25\string:55,683 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:25\string:55,788 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:25\string:56,836 - Pression sur le bouton "START"
+
+2015-08-27 11\string:25\string:57,136 - Vitesse de rotation\string: 10.0
+
+2015-08-27 11\string:26\string:05,027 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:26\string:05,201 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:26\string:25,814 - Pression sur le bouton "START"
+
+2015-08-27 11\string:26\string:25,989 - Vitesse de rotation\string: 10.0
+
+2015-08-27 11\string:26\string:41,418 - Vitesse de rotation\string: 18.0
+
+2015-08-27 11\string:26\string:46,953 - Pression sur le bouton "PAUSE"
+
+2015-08-27 11\string:26\string:47,462 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:27\string:42,687 - Pression sur le bouton "START"
+
+2015-08-27 11\string:27\string:42,986 - [ERROR] - (boucle principale)
+
+2015-08-27 11\string:27\string:44,866 - Une erreur est survenue !
+
+2015-08-27 11\string:28\string:19,908 - Pression sur le bouton "START"
+
+2015-08-27 11\string:28\string:38,423 - Vitesse d'avance d'avance\string: 40.0
+
+2015-08-27 11\string:28\string:41,782 - Vitesse de rotation\string: 11.0
+
+2015-08-27 11\string:28\string:42,462 - Vitesse de rotation\string: 12.0
+
+2015-08-27 11\string:28\string:43,144 - Vitesse de rotation\string: 19.0
+
+2015-08-27 11\string:28\string:43,819 - Vitesse de rotation\string: 25.0
+
+2015-08-27 11\string:28\string:44,493 - Vitesse de rotation\string: 29.0
+
+2015-08-27 11\string:28\string:45,849 - Vitesse de rotation\string: 42.0
+
+2015-08-27 11\string:28\string:46,527 - Vitesse de rotation\string: 47.0
+
+2015-08-27 11\string:28\string:47,206 - Vitesse de rotation\string: 102.0
+
+2015-08-27 11\string:28\string:58,813 - Mise en pause automatique de la bobine
+
+2015-08-27 11\string:28\string:58,838 - Pause programmée de la bobine
+
+2015-08-27 11\string:29\string:00,291 - Vitesse de rotation\string: 0.0
+
+2015-08-27 11\string:32\string:32,265 - Pression sur le bouton "START"
+
+2015-08-27 11\string:59\string:55,565 - Pression sur le bouton "START"
+
+2015-08-27 12\string:00\string:12,095 - Pression sur le bouton "PAUSE"
+
+2015-08-27 12\string:00\string:12,598 - Vitesse de rotation\string: 0.0
+
+2015-08-27 12\string:01\string:53,459 - Pression sur le bouton "START"
+
+2015-08-27 12\string:23\string:43,766 - Pression sur le bouton "START"
+
+2015-08-27 12\string:23\string:50,019 - Mise en pause automatique de la bobine
+
+2015-08-27 12\string:23\string:50,024 - Pause programmée de la bobine
+
+2015-08-27 12\string:23\string:51,049 - Vitesse de rotation\string: 0.0
+
+2015-08-27 12\string:23\string:58,603 - La bobine s'est terminé avec succès
+
+2015-08-27 12\string:26\string:39,357 - Pression sur le bouton "START"
+
+2015-08-27 12\string:36\string:17,112 - Pression sur le bouton "PAUSE"
+
+2015-08-27 12\string:36\string:18,216 - Pression sur le bouton "START"
+
+2016-07-28 09\string:43\string:18,745 - Pression sur le bouton "START"
+
+2016-07-28 09\string:43\string:18,878 - [ERROR] - (boucle principale)
+
+2016-07-28 09\string:43\string:20,813 - Une erreur est survenue !
+
+2016-07-28 09\string:44\string:05,254 - Casse du fil !
+
+2016-07-28 09\string:44\string:37,684 - Une erreur est survenue !
+
+2016-07-28 09\string:47\string:40,843 - Pression sur le bouton "START"
+
+2016-07-28 09\string:47\string:40,967 - [ERROR] - (boucle principale)
+
+2016-07-28 09\string:47\string:43,686 - Une erreur est survenue !
+
+2016-07-28 09\string:49\string:27,179 - Casse du fil !
+
+2016-07-28 10\string:46\string:27,777 - Pression sur le bouton "START"
+
+2016-07-28 10\string:49\string:33,443 - Pression sur le bouton "START"
+
+2016-07-28 10\string:51\string:25,185 - Pression sur le bouton "START"
+
+2016-07-28 10\string:54\string:32,762 - Pression sur le bouton "START"
+
+2016-07-28 11\string:04\string:50,731 - Pression sur le bouton "START"
+
+2016-07-28 11\string:06\string:53,986 - Pression sur le bouton "START"
+
+2016-07-28 11\string:08\string:20,999 - Pression sur le bouton "START"
+
+2016-07-28 11\string:09\string:02,447 - Pression sur le bouton "START"
+
+2016-07-28 11\string:20\string:03,155 - Pression sur le bouton "START"
+
+\section{Signatures après activités}
+
+\begin{center}
+	\begin{tabular}{|c|c|c|}
+        \hline
+        Exécutant & Demandeur & Responsable Microsys \\
+        \hline
+         \hspace{4.5cm} & \hspace{4.5cm} & \hspace{4.5cm} \\
+        &&\\
+        &&\\
+        &&\\
+        \hline
+	\end{tabular}
+\end{center}
+
+\section{Commentaires éventuels}
+
+\end{document}

@@ -1,0 +1,136 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Template de Projet/rapport
+% LaTeX Template
+%
+% Template pour des documents courts
+% de type "article"
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES ET AUTRES CONFIGURATIONS DE DOCUMENT
+%----------------------------------------------------------------------------------------
+
+\documentclass[a4paper, 11pt]{article}
+
+\usepackage[latin1]{inputenc} % Pour avoir les caractères "francais"
+\usepackage[french]{babel} % Typographie francaise
+\usepackage[T1]{fontenc}
+\usepackage[top=2cm, bottom=4cm, left=2.5cm, right=2.5cm]{geometry}% Pour les marges
+
+%%%%%%%%%% FONTES %%%%%%%%%%			% quelques fontes possibles
+%\usepackage{mathptmx}					% times
+\usepackage{lmodern}					% fonte latin moderne
+%-----------------------------
+%\usepackage[scaled]{helvet}%helvetica
+%\usepackage[scaled]{uarial}%arial
+%##############################
+\usepackage{graphicx} % Pour les images
+\usepackage{caption}
+\usepackage{subcaption}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{array} 						% Utile pour les tableaux
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{parskip}
+\usepackage{cases}						%
+\setlength{\parindent}{1cm}				% La taille de la tabulation en début de paragraphe
+\usepackage{chemist}					% Pour la chimie
+\usepackage{titlesec}					%Pour changer l'intitulé des titres et chapitres
+\usepackage{textcomp}					%pour les °
+%Pour avoir les notes en bas de page rzseter à chaque page
+\usepackage{perpage}					% the perpage package
+\MakePerPage{footnote}					% the perpage package command
+
+\usepackage{wrapfig}					% Pour permettre d'entourer une image avec du texte
+\usepackage{sidecap}					%Permet de mettre la description a coté de l'image
+\usepackage[final]{pdfpages}			% pour inclure des pdf dans le document final
+
+\usepackage{float}							%Permet d'utiliser [H] comme paramètre pour les figures (ce qui FIXE les figures à la place définie)
+
+\usepackage{framed}
+
+\usepackage{pgfplots}
+\pgfplotsset{width = 10cm}
+%%%%%%%%%% Commandes %%%%%%%%%%
+
+%\newcommand{\TT}[1]{$\theta_t$}
+\newcommand{\x}{\text{ . }}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+%\setcounter{secnumdepth}{3}					% Pour définir la "profondeur" de la numérotations des parties
+
+%\interfootnotelinepenalty=10000 			%pour les notes de bas de pages - pas utilisé dans ce travail
+%%%%%%%%%% ENTETE %%%%%%%%%%
+\usepackage{fancyhdr}						% Permet de définir avec précision ce qu'il y a en entete et pied de page
+\setlength{\headheight}{50pt}
+\pagestyle{fancy}
+\renewcommand{\sectionmark}[1]{\markright{\thesection \ #1}{}}
+%\pagestyle{fancyplain}			% "plain" pour toute les pages, même les titres
+%\fancyhf{}						% Pour redéfinir le "plain"
+%\lhead{\fancyplain{}{[...]\\\textit{[...]}}}
+%\rhead{\fancyplain{}{[...]}}
+%\lfoot{\fancyplain{}{\thesection{} \rightmark}}
+%\rfoot{\fancyplain{}{\thepage}}
+
+
+%%%%%%%%%% BIBTEX %%%%%%%%%%
+%\include{tocbibind}							% L'extension tocbibind permet de faire figurer la bibliographie dans la table des matières.
+\usepackage[nottoc,numbib]{tocbibind}			% Pour include la bibliographie dans la table des matière
+\usepackage[fixlanguage]{babelbib}
+\selectbiblanguage{french}
+
+%\usepackage{natbib}
+%\bibliographystyle{plainat}
+%\bibliographystyle{G:/LATEX/plain-fr-bis}
+%\bibliographystyle{smfplain}
+%##############################
+
+
+
+
+
+
+\begin{document}
+\begin{titlepage}
+
+\begin{center}
+% Partie supérieur de la page. On a besoin du '~' is parce que \\
+% ne fonctionne que si on a déjà commencé un paragraphe.
+
+\includegraphics[width=0.6\textwidth]{G:/LATEX/gramme.png}~ \\[5cm]
+\textsc{\LARGE Intitulé du cours}\\[1.5cm]
+
+\textsc{\Large Partie du cours (intitulé secondaire)}\\[0.5cm]
+
+\rule{\linewidth}{0.5mm} \\[0.4cm]
+{ \huge \bfseries Titre principal \\[0.4cm] }
+\rule{\linewidth}{0.5mm} \\[3.5cm]
+
+\textsc{\large MASTER I 2013-2014}\\[0.5cm]
+
+
+\vfill
+
+% Bas de page
+%Auteur du document
+{\large Nathan \bsc{MAQUET}}
+
+\end{center}
+
+\end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%					Mise en forme du texte
+\fancyhf{}						% Pour redéfinir le "plain"
+\lhead{\fancyplain{}{[...]\\\textit{[...]}}}
+\rhead{\fancyplain{}{[...]}}
+\lfoot{\fancyplain{}{\rightmark}}
+\rfoot{\fancyplain{}{\thepage}}
+%-------------------------------------------------------------------------------
+%					Corps du texte
+
+\section{Super graph}
+\label{sec:SuperGraph}

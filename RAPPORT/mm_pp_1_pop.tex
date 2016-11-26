@@ -1,0 +1,118 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[top=2cm, bottom=4cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{parskip}
+\usepackage{cases}
+\setlength{\parindent}{1cm}
+\usepackage{titlesec}
+\usepackage{textcomp}
+\usepackage[final]{pdfpages}
+\usepackage{float}
+\usepackage{framed}
+\usepackage{pgfplots}
+\pgfplotsset{width = 11cm}
+\newcommand{\x}{\text{ . }}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\sectionmark}[1]{\markright{\thesection \ #1}{}}
+\begin{document}
+\begin{titlepage}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{./sources/microsys.jpg}~ \\[5cm]
+\textsc{\LARGE Rapport automatique}\\[1.5cm]
+\rule{\linewidth}{0.5mm} \\[0.4cm]
+{ \huge \bfseries Bobine \verb?mm_pp_1_pop? \\[0.4cm] }
+\rule{\linewidth}{0.5mm} \\[3.5cm]
+\textsc{\large \today}\\[0.5cm]
+\vfill
+\end{center}
+\end{titlepage}
+\fancyhf{}
+\lhead{\fancyplain{}{Projet: \verb?pp?}} 
+\rhead{\fancyplain{}{Opérateur: \verb?mm?}}
+\lfoot{\fancyplain{}{\rightmark}}
+\rfoot{\fancyplain{}{\thepage}}
+\section{Informations sur la bobine}
+L'opération de bobinage s'est terminé avec succès le \today.
+ 
+Le coût en cuivre est estimé à 0.0 euros.
+ 
+ 
+\begin{tabular}{ll}
+Statut de la bobine: & Terminé \\ 
+Opérateur: & \verb?mm? \\ 
+Nom du projet: & \verb?pp? \\ 
+Type de bobine: & \verb?1? \\ 
+Numéro de la bobine: & \verb?pop? \\ 
+ID bobine: & \verb?mm_pp_1_pop? \\ 
+Diamètre du fil: & 50 um \\ 
+Diamètre du noyau: & 5 mm \\ 
+Longueur de la bobine: & 10 mm \\ 
+Nombre de tours total: & 0.0 spires \\ 
+Nombre de couches total: & 1 couches \\ 
+Temps total: & 26.24 s \\ 
+Temps hors pause: & 26.24 s \\ 
+Interruption à : & Pas d'interruption \\ 
+\end{tabular}
+\clearpage
+\section{Vitesse}
+La vitesse du mandrin est mesurée par le compte-tours. Cette valeur est indicative.
+ 
+\begin{tikzpicture}
+\begin{axis}[xlabel = temps écoulé (secondes),ylabel = vitesse de rotation (RPM) ,no markers,legend style={at={(1.02,1)},legend,anchor=north west }]
+\addplot table [x=time, y=speed, col sep=semicolon]{mm_pp_1_pop.csv};
+\addplot table [x=time, y=speedC, col sep=semicolon]{mm_pp_1_pop.csv};
+\legend{Mandrin, Consigne}
+\end{axis}
+\end{tikzpicture}
+\section{Avance}
+Consigne de la vitesse d'avance (en $\mu$m par tour de mandrin)
+ 
+\begin{tikzpicture}
+\begin{axis}[xlabel = temps écoulé (secondes),ylabel = avance ($\mu$m/spire) ,no markers,legend style={at={(1.02,1)},legend,anchor=north west }]
+\addplot table [x=time, y=avance, col sep=semicolon]{mm_pp_1_pop.csv};
+\legend{avance}
+\end{axis}
+\end{tikzpicture}
+\section{Sonde Hall}
+\begin{tikzpicture}
+\begin{axis}[xlabel = temps écoulé (secondes),ylabel = Tension (V) ,no markers,legend style={at={(1.02,1)},legend,anchor=north west }]
+\addplot table [x=time, y=sondeHall, col sep=semicolon]{mm_pp_1_pop.csv};
+\legend{sondeHall}
+\end{axis}
+\end{tikzpicture}
+\section{Evénements survenus}
+2016-07-28 11\string:15\string:16,718 - Pression sur le bouton "START"
+
+2016-07-28 11\string:19\string:00,171 - Pression sur le bouton "START"
+
+\section{Signatures après activités}
+
+\begin{center}
+	\begin{tabular}{|c|c|c|}
+        \hline
+        Exécutant & Demandeur & Responsable Microsys \\
+        \hline
+         \hspace{4.5cm} & \hspace{4.5cm} & \hspace{4.5cm} \\
+        &&\\
+        &&\\
+        &&\\
+        \hline
+	\end{tabular}
+\end{center}
+
+\section{Commentaires éventuels}
+
+\end{document}

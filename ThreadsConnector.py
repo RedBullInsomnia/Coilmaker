@@ -3,16 +3,17 @@
 import logging
 import Queue
 
+
 class ThreadsConnector:
-    """ Contrôle la communication entre thread.
-    Classe inspirée de discutions sur le site:
-    www.stackoverflow.com
+    """ Contrôle la communication entre threads.
+    Classe inspirée de discutions sur le site www.stackoverflow.com
     """
     COMPTEUR = 0
-    def __init__(self,name = None):
+
+    def __init__(self, name=None):
         """ Initialisation de l'objet """
-        self.messages   = Queue.Queue()
-        if (name == None):
+        self.messages = Queue.Queue()
+        if name is None:
             self.name = 'ThreadsConnector - {}'.format(ThreadsConnector.COMPTEUR)
         else:
             self.name = name
@@ -27,9 +28,9 @@ class ThreadsConnector:
     def is_empty(self):
         return self.messages.empty()
 
-    def get_wait(self,time):
+    def get_wait(self, time):
         try:
-            return self.messages.get(True,time)
+            return self.messages.get(True, time)
         except Queue.Empty:
             pass
 
@@ -37,7 +38,6 @@ class ThreadsConnector:
         """ Just a wrapper to Queue.get_nowait() """
         return self.messages.get_nowait()
 
-    
     def flush(self):
         """Pour vider la queue"""
         while not self.messages.empty():
@@ -45,4 +45,3 @@ class ThreadsConnector:
                 self.messages.get_nowait()
             except Queue.Empty:
                 pass
-            

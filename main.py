@@ -32,7 +32,7 @@ if __name__ == '__main__':
 #
 ########################################
     #   On initialise le processus de logging
-    
+
     #   définition d'un loggeur qui enregistre tout dans le fichier
     ROOTLEVEL = logging.DEBUG
     # ROOTLEVEL = logging.INFO
@@ -46,113 +46,106 @@ if __name__ == '__main__':
     logging.addLevelName(15, 'DATA')
     rootLogger.debug('Le processus de log principal a été initialisé')
     rootLogger.info('Phase d\'initialisation')
-    #   On crée un loggeur pour les données 
+    #   On crée un loggeur pour les données
     DATALOGGER = 'datalogger'
     dataLogger = myDataRecord.dataRecord(DATALOGGER)
     rootLogger.debug('Le processus de log secondaire est activé')
     rootLogger.info('Les processus de log sont actif')
 
     GPIO.setmode(GPIO.BCM)
-   
- 
+
+
 
     ser = mySerial.LockSerial()
 
     rootLogger.info('Serial et GPIO actif')
     #   Initialisation des objets
     rootLogger.info('Début de la construction des différents objets')
-    
 
-    
+
+
     mwOut = TC.ThreadsConnector()
     mwIn = TC.ThreadsConnector()
-    
+
     rootLogger.info('Création des évenements')
     runEvent = threading.Event()
     nouvelleBobineEvent = threading.Event()
     errorEvent = threading.Event()
     rootLogger.info('Création des éléments')
-    
+
     gMem = mem.Mem()
-    
-    p = mouvement.Position(ser,gMem,runEvent,nouvelleBobineEvent,errorEvent)
-    sonde = SH.SondeHall(ser,gMem,runEvent,nouvelleBobineEvent,errorEvent)
-    CT = compteTour.CompteTour(ser,gMem,runEvent,nouvelleBobineEvent,errorEvent)
-    core = core.Core(ser,gMem,runEvent,nouvelleBobineEvent,errorEvent,mwOut,mwIn,dataLogger)
+
+    p = mouvement.Position(ser, gMem, runEvent, nouvelleBobineEvent, errorEvent)
+    sonde = SH.SondeHall(ser, gMem, runEvent, nouvelleBobineEvent, errorEvent)
+    CT = compteTour.CompteTour(ser, gMem, runEvent, nouvelleBobineEvent, errorEvent)
+    core = core.Core(ser, gMem, runEvent, nouvelleBobineEvent, errorEvent, mwOut, mwIn, dataLogger)
     gMem.setPos(p)
     gMem.setCore(core)
     gMem.setCT(CT)
     gMem.setSH(sonde)
-    mw = iF.MainWindow(mwIn,mwOut,core,dataLogger,runEvent,nouvelleBobineEvent,errorEvent)    
-    
+    mw = iF.MainWindow(mwIn, mwOut, core, dataLogger, runEvent, nouvelleBobineEvent, errorEvent)
+
 ########################################
 #
 #       Programme principal
 #
 ########################################
 
-    
-    #  On lance le programme principal
+
+    # On lance le programme principal
     rootLogger.info('Début du programme principal')
     rootLogger.info('Mise à zéro moteur')
     rootLogger.debug('Stall Detection actif')
-    print "Mise à zéro machine"
+    print("Mise à zéro machine")
 
-    mess = [1,28,203,0,0,0,7,255]
-    F.addChecksum(mess)
-    ser.write(mess)
+    msg = [1, 28, 203, 0, 0, 0, 7, 255]
+    ser.write(msg)
     time.sleep(0.1)
 
-    boucle = True
-    while boucle:
-        mess = [1,28,0,0,0,0,0,40]
-        F.addChecksum(mess)
-        resp = ser.readWrite(mess)
+    loop = True
+    while loop:
+        msg = [1, 28, 0, 0, 0, 0, 0, 40]
+        resp = ser.readWrite(msg)
         print "resp = "
         print resp
-        if resp[4:8] == [0,0,0,40]:
-            boucle = False
+        if resp[4:8] == [0, 0, 0, 40]:
+            loop = False
         time.sleep(1)
 
-    mess = [1,5,205,0,0,0,0,0]
-    F.addChecksum(mess)
-    ser.write(mess)
+    msg = [1, 5, 205, 0, 0, 0, 0, 0]
+    ser.write(msg)
     time.sleep(0.1)
-    mess = [1,5,203,0,0,0,0,0]
-    F.addChecksum(mess)
-    ser.write(mess)
+    msg = [1, 5, 203, 0, 0, 0, 0, 0]
+    ser.write(msg)
     time.sleep(0.1)
-    mess = [1,5,1,0,0,0x7F,0xFF,0xFF]
-    F.addChecksum(mess)
-    ser.write(mess)
+    msg = [1, 5, 1, 0, 0, 0x7F, 0xFF, 0xFF]
+    ser.write(msg)
     time.sleep(0.1)
-    mess = [1,4,0,0,0,0x7F,0x00,0x00]
-    F.addChecksum(mess)
-    ser.write(mess)
+    msg = [1, 4, 0, 0, 0, 0x7F, 0x00, 0x00]
+    ser.write(msg)
     rootLogger.debug('Stall Detection actif')
     rootLogger.info('Fin de la mise à zéro moteur')
-    
+
     CT.start()
     core.start()
     sonde.start()
     p.start()
-    
+
     mw.mainloop()
-    
+
     p._stop()
     core._stop()
     CT._stop()
-    sonde._stop()  
-    
+    sonde._stop()
+
     time.sleep(1)
     CT.join()
     core.join()
     sonde.join()
     p.join()
-    
+
     ser.close()
     GPIO.cleanup()
-    
+
     rootLogger.warning('Fin de l\'application')
     logging.shutdown()
-    

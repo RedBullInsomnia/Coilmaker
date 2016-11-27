@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
     gMem = mem.Mem()
 
-    p = mouvement.Position(ser, gMem, run_event, newCoil_event, error_event)
+    p = mouvement.Position(ser, gMem, run_event, newCoil_event)
     sonde = SondeHall(ser, gMem, run_event)
     CT = CompteTour(ser, gMem, run_event, newCoil_event)
     core = core.Core(ser, gMem, run_event, newCoil_event, error_event, mwOut,

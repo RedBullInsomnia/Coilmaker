@@ -307,8 +307,7 @@ class Core(Thread):
             self.l.info('Bobine "{}" chargée'.format(filename))
             f.close()
             self.dataLogger.changeName(self.dicoBobine[DEFINE.BOBID])
-            self.variables[DEFINE.AVANCE] = int(self.dicoBobine[DEFINE.DFIL]) +
-            int(int(self.dicoBobine[DEFINE.DFIL])/5.0)
+            self.variables[DEFINE.AVANCE] = int(self.dicoBobine[DEFINE.DFIL]) + int(int(self.dicoBobine[DEFINE.DFIL])/5.0)
             self.file = filename
 
     def read(self):

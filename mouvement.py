@@ -32,7 +32,8 @@ class Position(Moteur):
         time.sleep(0.1)
 
         #  Moving speed is 1,2 * DFIL, by default
-        mess = [1, 5, 4, 0] + self.convToBytes(self.computeMovingSpeed)
+        movingSpeed = self.computeMovingSpeed()
+	mess = [1, 5, 4, 0] + self.convToBytes(movingSpeed)
         self.ser.write(mess)
         time.sleep(0.1)
         self.l.info("Moteur de translation configuré")
@@ -42,7 +43,7 @@ class Position(Moteur):
     def computeStopPos(self, startPos):
         coil_length = float(str(
             self.mem.core.dicoBobine[DEFINE.LBOBINE]).replace(',', '.'))
-        return int(startPos - coil_length*1000*63.952)
+        return int(startPos + coil_length*1000*63.952)
 
     def computeMovingSpeed(self):
         return int(0.2*float(str(self.mem.core.dicoBobine[DEFINE.DFIL]).
@@ -103,7 +104,7 @@ class Position(Moteur):
         self.direction = 0
         self.configurate = False
 
-    def convToBytes(integer):
+    def convToBytes(self, integer):
         """Converts an unsigned integer into an array of 4 bytes, in a big-endian
            fashion. Used to send the number of µsteps to the servos.
             arguments :

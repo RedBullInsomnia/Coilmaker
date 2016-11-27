@@ -57,6 +57,19 @@ class CompteTour(Moteur):
             self.l.error("Code de Gray inconnu: {},{},{}".format(GPIO.input(16), GPIO.input(20),GPIO.input(21)))
             return 0
 
+    def bin2int(bits):
+        'From binary bits, msb at index 0 to integer'
+        i = 0
+        for bit in bits:
+            i = i * 2 + bit
+        return i
+
+    def gray2bin(bits):
+        b = [bits[0]]
+        for nextb in bits[1:]:
+            b.append(b[-1] ^ nextb)
+        return b
+
     def configure(self, x):
         self.configurate = x
 

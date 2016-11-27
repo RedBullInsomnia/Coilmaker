@@ -148,8 +148,8 @@ class Core(Thread):
                     # Condition d'arrêt
                     self.l.debug('On a fini la bobine')
                     self.ser.write([2, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04])
-                    self.dataLogger.event("Le programme s'est terminé avec
-                                          succès")
+                    self.dataLogger.event("Le programme s'est terminé avec"
+                                          "succès")
                     # self.newCoil.clear()
                     self.mem.SH.setEnable(False)
                     increment = 1
@@ -265,11 +265,12 @@ class Core(Thread):
             self.newCoil.clear()
             self.bobineDemarree = False
         else:
-            self.ser.write([3, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04])
+            # Stop the motors !
+            self.ser.write([3, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
             time.sleep(0.1)
-            self.ser.write([2, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04])
+            self.ser.write([2, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
             time.sleep(0.1)
-            self.ser.write([1, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04])
+            self.ser.write([1, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
 
     def startBobine(self):
         self.newCoil.set()

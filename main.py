@@ -10,11 +10,11 @@ import random
 import time
 
 import mem
-import iFunctions as F
-import myDataRecord
+import iFunctions as iF
+from myDataRecord import dataRecord
+from compteTour import CompteTour
 import ThreadsConnector as TC
-import Interface as iF
-import compteTour
+import Interface as intfc
 import core
 import mySerial
 import sondeHall as SH
@@ -22,77 +22,61 @@ import mouvement
 import DEFINE
 
 
-
-
 if __name__ == '__main__':
-
-########################################
-#
-#       Phase d'initialisation
-#
-########################################
-    #   On initialise le processus de logging
-
-    #   définition d'un loggeur qui enregistre tout dans le fichier
+    """ initialisation """
+    #  Log everything to a file
     ROOTLEVEL = logging.DEBUG
-    # ROOTLEVEL = logging.INFO
-    formatter = logging.Formatter('%(asctime)s [%(levelname)8s] %(name)16s - %(message)s')
+    formatter = logging.Formatter(
+        '%(asctime)s [%(levelname)8s] %(name)16s - %(message)s')
     rootLogger = logging.getLogger()
     rootLogger.setLevel(ROOTLEVEL)
-    rootHandler = logging.FileHandler('LOG/log%s.log'%str(int(time.time())))
+    rootHandler = logging.FileHandler('LOG/log%s.log' % str(int(time.time())))
     rootHandler.setLevel(ROOTLEVEL)
     rootHandler.setFormatter(formatter)
     rootLogger.addHandler(rootHandler)
     logging.addLevelName(15, 'DATA')
     rootLogger.debug('Le processus de log principal a été initialisé')
     rootLogger.info('Phase d\'initialisation')
-    #   On crée un loggeur pour les données
+
+    # Datalogger
     DATALOGGER = 'datalogger'
-    dataLogger = myDataRecord.dataRecord(DATALOGGER)
+    dataLogger = dataRecord(DATALOGGER)
     rootLogger.debug('Le processus de log secondaire est activé')
-    rootLogger.info('Les processus de log sont actif')
+    rootLogger.info('Les processus de log sont actifs')
 
+    # Initialisation of GPIO and serial communication
     GPIO.setmode(GPIO.BCM)
-
-
-
     ser = mySerial.LockSerial()
+    rootLogger.info('Serial et GPIO actifs')
 
-    rootLogger.info('Serial et GPIO actif')
-    #   Initialisation des objets
+    # Objects initialisation
     rootLogger.info('Début de la construction des différents objets')
-
-
 
     mwOut = TC.ThreadsConnector()
     mwIn = TC.ThreadsConnector()
 
     rootLogger.info('Création des évenements')
-    runEvent = threading.Event()
-    nouvelleBobineEvent = threading.Event()
-    errorEvent = threading.Event()
+    run_event = threading.Event()
+    newCoil_event = threading.Event()
+    error_event = threading.Event()
     rootLogger.info('Création des éléments')
 
     gMem = mem.Mem()
 
-    p = mouvement.Position(ser, gMem, runEvent, nouvelleBobineEvent, errorEvent)
-    sonde = SH.SondeHall(ser, gMem, runEvent, nouvelleBobineEvent, errorEvent)
-    CT = compteTour.CompteTour(ser, gMem, runEvent, nouvelleBobineEvent, errorEvent)
-    core = core.Core(ser, gMem, runEvent, nouvelleBobineEvent, errorEvent, mwOut, mwIn, dataLogger)
+    p = mouvement.Position(ser, gMem, run_event, newCoil_event, error_event)
+    sonde = SH.SondeHall(ser, gMem, run_event, newCoil_event, error_event)
+    CT = compteTour.CompteTour(ser, gMem, run_event, newCoil_event,
+                               error_event)
+    core = core.Core(ser, gMem, run_event, newCoil_event, error_event, mwOut,
+                     mwIn, dataLogger)
     gMem.setPos(p)
     gMem.setCore(core)
     gMem.setCT(CT)
     gMem.setSH(sonde)
-    mw = iF.MainWindow(mwIn, mwOut, core, dataLogger, runEvent, nouvelleBobineEvent, errorEvent)
+    mw = intfc.MainWindow(mwIn, mwOut, core, dataLogger, run_event,
+                          newCoil_event, error_event)
 
-########################################
-#
-#       Programme principal
-#
-########################################
-
-
-    # On lance le programme principal
+    """ Launching the program """
     rootLogger.info('Début du programme principal')
     rootLogger.info('Mise à zéro moteur')
     rootLogger.debug('Stall Detection actif')
@@ -106,8 +90,7 @@ if __name__ == '__main__':
     while loop:
         msg = [1, 28, 0, 0, 0, 0, 0, 40]
         resp = ser.readWrite(msg)
-        print "resp = "
-        print resp
+        print("resp : ", resp)
         if resp[4:8] == [0, 0, 0, 40]:
             loop = False
         time.sleep(1)
@@ -131,8 +114,10 @@ if __name__ == '__main__':
     sonde.start()
     p.start()
 
+    """ Main loop """
     mw.mainloop()
 
+    """ End of program """
     p._stop()
     core._stop()
     CT._stop()

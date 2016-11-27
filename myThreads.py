@@ -14,7 +14,8 @@ class InterruptThread(Exception):
 
 class Thread(threading.Thread):
     """Défini une classe d'objet myThread
-    Attention! Il faut avoir initialisé un fichier LOG avant !!"""
+    Attention! Il faut avoir initialisé un fichier LOG avant !!
+    """
     def __init__(self, name=None):
         threading.Thread.__init__(self)
         if name is not None:
@@ -37,11 +38,14 @@ class Thread(threading.Thread):
             self.run_sav()
             self.run = self.run_sav
             if self.kill is True:
-                raise InterruptThread('Interruption du myThread - {}'.format(self.getName()))
+                raise InterruptThread('Interruption du myThread - {}'.
+                                      format(self.getName()))
         except InterruptThread:
-            self.l.exception(('Le myThread - {} a été brutalement arrêté'.format(self.getName())))
+            self.l.exception(('Le myThread - {} a été brutalement arrêté'.
+                             format(self.getName())))
         else:
-            self.l.info(('Le myThread - {} s\'est correctement terminé'.format(self.getName())))
+            self.l.info(('Le myThread - {} s\'est correctement terminé'.
+                        format(self.getName())))
 
     def kill(self):
         self.kill = True

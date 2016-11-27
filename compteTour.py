@@ -10,12 +10,12 @@ class CompteTour(Moteur.Moteur):
         tour:           enregistre le nombre de tour effectué
         compteurRPM:    enregistre la vitesse (en tour par minutes)
     """
-    def __init__(self, ser, memory, runEvent, nouvelleBobineEvent, errorEvent):
-        Moteur.Moteur.__init__(self, runEvent, nouvelleBobineEvent, 'Compte-tour')
+    def __init__(self, ser, memory, run_event, newCoil_event, errorEvent):
+        Moteur.Moteur.__init__(self, run_event, newCoil_event, 'Compte-tour')
         self.ser = ser
         self.mem = memory
-        self.runEvent = runEvent
-        self.nouvelleBobine = nouvelleBobineEvent
+        self.run_event = run_event
+        self.nouvelleBobine = newCoil_event
         self.errorEvent = errorEvent
 
         #   nombre de tour déjà effectué

@@ -2,14 +2,14 @@
 # -*- coding: UTF-8 -*-
 import time
 import DEFINE
-import Moteur
+from Moteur import Moteur
 import iFunctions as iF
 
 
-class Position(Moteur.Moteur):
-    def __init__(self, ser, mem, runEvent, nouvelleBobineEvent, errorEvent):
+class Position(Moteur):
+    def __init__(self, ser, mem, run_event, newCoil_event, errorEvent):
         """Permet le déplacement."""
-        Moteur.Moteur.__init__(self, runEvent, nouvelleBobineEvent,
+        Moteur.Moteur.__init__(self, run_event, newCoil_event,
                                name='Deplacement')
         self.ser = ser
         self.mem = mem
@@ -30,17 +30,26 @@ class Position(Moteur.Moteur):
         resp = self.ser.readWrite(mess)
         print("respyyy: ", resp)
         self.startPos = resp[4]*256**3 + resp[5]*256**2 + resp[6]*256 + resp[7]
-        self.stopPos = max(0, int(self.startPos - float(str(self.mem.core.dicoBobine[DEFINE.LBOBINE]).replace(',','.'))*1000*63.952))
+        self.stopPos = self.computeStopPos(self.startPos)
         print("stopposyyy: ", self.stopPos)
         time.sleep(0.1)
 
-        #  Vitesse d'avance - par défaut: 1,2 * DFIL
-        mess = [1, 5, 4, 0] + iF.convToBytes(int(0.2*float(str(self.mem.core.dicoBobine[DEFINE.DFIL]).replace(',','.'))*2.047))
+        #  Moving speed is 1,2 * DFIL, by default
+        mess = [1, 5, 4, 0] + iF.convToBytes(self.computeMovingSpeed)
         self.ser.write(mess)
         time.sleep(0.1)
         self.l.info("Moteur de translation configuré")
         self.direction = 2
         self.configurate = True
+
+    def computeStopPos(self, startPos):
+        coil_length = float(str(
+            self.mem.core.dicoBobine[DEFINE.LBOBINE]).replace(',', '.'))
+        return int(startPos - coil_length*1000*63.952)
+
+    def computeMovingSpeed(self):
+        return int(0.2*float(str(self.mem.core.dicoBobine[DEFINE.DFIL]).
+                   replace(',', '.')) * 2.047)
 
     def preBoucle(self):
         mess = [1, 4, 0, 0] + iF.convToBytes(self.stopPos)

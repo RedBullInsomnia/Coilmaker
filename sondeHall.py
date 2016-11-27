@@ -8,12 +8,14 @@ import iFunctions as iF
 
 class SondeHall(myThreads.Thread):
     """Permet de lire la tension de la sonde de Hall, et de contrôler le moteur
-    La régulation de la tension mécanique dans le fil est également géré par cet objet"""
-    def __init__(self, ser, mem, runEvent, nouvelleBobineEvent, errorEvent):
+    La régulation de la tension mécanique dans le fil est également gérée par
+    cet objet.
+    """
+    def __init__(self, ser, mem, run_event, newCoil_event, error_event):
         myThreads.Thread.__init__(self, 'Sonde Hall')
-        self.runEvent = runEvent
-        self.nouvelleBobine = nouvelleBobineEvent
-        self.errorEvent = errorEvent
+        self.run_event = run_event
+        self.newCoil = newCoil_event
+        self.error_event = error_event
         self.l.info('Initialisation du Thread - Sonde Hall')
         self.maxRange = 1023.0
         self.mem = mem
@@ -58,11 +60,10 @@ class SondeHall(myThreads.Thread):
             else:
                 self.erreurSonde += 1
 
-            if (self.erreurSonde > 5) and (not self.errorRise) and self.runEvent and self.enable:
+            if (self.erreurSonde > 5) and (not self.errorRise) and self.run_event and self.enable:
                 self.mem.core.EventError("Casse du fil !")
                 self.errorRise = True
                 msg = [3, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-                iF.addChecksum(msg)
                 self.ser.write(msg)
 
             time.sleep(0.1)

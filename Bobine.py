@@ -13,7 +13,7 @@ except:
 
 class wBobine(tk.Toplevel):
     """Défini une nouvelle fenêtre de bobine.
-    Est utiliser pour ouvrir ou créer une nouvelle bobine.
+    Est utilisé pour ouvrir ou créer une nouvelle bobine.
     """
     def __init__(self, parent):
         tk.Toplevel.__init__(self, parent)
@@ -72,7 +72,8 @@ class wBobine(tk.Toplevel):
         try:
             f = open('BOBINE/'+str((self.IDbobine).get())+'.bobine', 'w')
         except:
-            self.logger.error("Impossible de créer le fichier {}.bobine".format(str((self.IDbobine).get())))
+            self.logger.error("Impossible de créer le fichier {}.bobine".
+                              format(str((self.IDbobine).get())))
         else:
             for i in self.vecteur09:
                 var = DEFINE.BOBINE_order[i]
@@ -113,7 +114,8 @@ class openWBobine(wBobine):
         except:
             self.destroy()
             print("Impossible d'ouvrir le fichier")
-            self.logger.error("Impossible d'ouvrir le fichier {}.bobine".format(filename))
+            self.logger.error("Impossible d'ouvrir le fichier {}.bobine".
+                              format(filename))
         else:
             self.logger.info('Bobine "{}" chargée'.format(filename))
             self.focus_set()

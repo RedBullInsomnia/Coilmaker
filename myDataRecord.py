@@ -39,7 +39,8 @@ class dataRecord():
         self.loggerData.addHandler(self.handlerData)
         # Pour le fichier d'événements
         self.loggerEvent.removeHandler(self.handlerEvent)
-        self.handlerEvent = logging.FileHandler('RESULTAT/{}-log-e.csv'.format(newName))
+        self.handlerEvent = logging.FileHandler('RESULTAT/{}-log-e.csv'.
+                                                format(newName))
         self.l.info('Création du fichier {}-log-e.csv'.format(newName))
         self.handlerEvent.setFormatter(self.eventformatter)
         self.loggerEvent.addHandler(self.handlerEvent)

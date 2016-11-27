@@ -19,14 +19,14 @@ import RPi.GPIO as GPIO
 class MainWindow(tk.Tk):
     """Classe qui va gérer la fenêtre principale.
     """
-    def __init__(self,connDown,connUp,core,dataLogger,runEvent,nouvelleBobineEvent,errorEvent,parent = None):
+    def __init__(self,connDown,connUp,core,dataLogger,run_event,newCoil_event,errorEvent,parent = None):
         """Constructeur de la fenêtre principale"""
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.debug("Initialisation de l'interface")
         self.connUp = connUp
         self.connDown = connDown
-        self.runE = runEvent
-        self.nouvelleBobine = nouvelleBobineEvent
+        self.runE = run_event
+        self.nouvelleBobine = newCoil_event
         self.errorEvent = errorEvent
         self.core = core
         self.bobineEnCours = False

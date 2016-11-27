@@ -21,10 +21,10 @@ class LockSerial():
 
         self.l = logging.getLogger(self.__class__.__name__)
 
-    def readWrite(self, tab):
+    def readWrite(self, bytes_list):
         self.lock.acquire(True)
-
-        self.ser.write(bytearray(tab))
+        self.addChecksum(bytes_list)
+        self.ser.write(bytearray(bytes_list))
         self.ser.flush()
         rep = self.ser.read(9)
         ans = []

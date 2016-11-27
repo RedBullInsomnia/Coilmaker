@@ -8,18 +8,18 @@ class ThreadsConnector:
     """ Contrôle la communication entre threads.
     Classe inspirée de discutions sur le site www.stackoverflow.com
     """
-    COMPTEUR = 0
+    count = 0
 
     def __init__(self, name=None):
         """ Initialisation de l'objet """
         self.messages = Queue.Queue()
         if name is None:
-            self.name = 'ThreadsConnector - {}'.format(ThreadsConnector.COMPTEUR)
+            self.name = 'ThreadsConnector - {}'.format(ThreadsConnector.count)
         else:
             self.name = name
         self.log = logging.getLogger(self.__class__.__name__)
         self.log.debug('Démarrage de {}'.format(self.name))
-        ThreadsConnector.COMPTEUR += 1
+        ThreadsConnector.count += 1
 
     def put_message(self, msg):
         """ Just a wrapper to Queue.put_nowait() """

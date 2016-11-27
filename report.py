@@ -22,7 +22,8 @@ class PdfLatex(myThreads.Thread):
             f = open('BOBINE/'+filename+'.bobine', 'r')
         except:
             print "Impossible d'ouvrir le fichier"
-            self.logger.error("Impossible d'ouvrir le fichier {}.bobine".format(filename))
+            self.logger.error("Impossible d'ouvrir le fichier {}.bobine".
+                              format(filename))
         else:
             dicoTmp = pickle.load(f)
             for clef, val in dicoTmp.items():
@@ -30,10 +31,10 @@ class PdfLatex(myThreads.Thread):
 
     def run(self):
         try:
-            f = open('RAPPORT/'+self.filename+'.tex','w')
-            e = open('RAPPORT/sources/avant.tex','r')
-            g = open('RAPPORT/sources/apres.tex','r')
-            eventFile = open('RESULTAT/'+self.filename+'-log-e.csv','r')
+            f = open('RAPPORT/' + self.filename+'.tex', 'w')
+            e = open('RAPPORT/sources/avant.tex', 'r')
+            g = open('RAPPORT/sources/apres.tex', 'r')
+            eventFile = open('RESULTAT/'+self.filename+'-log-e.csv', 'r')
         except:
             self.l.error("Impossible de créer le fichier {}.tex".format(self.filename))
         else:
@@ -42,28 +43,38 @@ class PdfLatex(myThreads.Thread):
             f.write("\\begin{center}\n")
             f.write("\\includegraphics[width=0.6\\textwidth]{./sources/microsys.jpg}~ \\\[5cm]\n")
             f.write("\\textsc{\\LARGE Rapport automatique}\\\\[1.5cm]\n")
-            if (self.state == True):
+
+            if self.state is True:
                 f.write("\\textsc{\\Large ECHEC}\\\\[0.5cm]")
+
             f.write("\\rule{\\linewidth}{0.5mm} \\\\[0.4cm]\n")
-            f.write("{ \\huge \\bfseries Bobine \\verb?" +"{}".format(self.dicoBobine[DEFINE.BOBID])+ "? \\\\[0.4cm] }\n")
+            f.write("{ \\huge \\bfseries Bobine \\verb?" +
+                    "{}".format(self.dicoBobine[DEFINE.BOBID]) +
+                    "? \\\\[0.4cm] }\n")
             f.write("\\rule{\\linewidth}{0.5mm} \\\\[3.5cm]\n")
             f.write("\\textsc{\\large \\today}\\\\[0.5cm]\n")
             f.write("\\vfill\n")
             f.write("\\end{center}\n")
             f.write("\\end{titlepage}\n")
             f.write("\\fancyhf{}\n")
-            f.write("\\lhead{\\fancyplain{}{Projet: \\verb?" +"{}".format(self.dicoBobine[DEFINE.NPROJET])+ "?}} \n")
-            if (self.state == True):
+            f.write("\\lhead{\\fancyplain{}{Projet: \\verb?" +
+                    "{}".format(self.dicoBobine[DEFINE.NPROJET]) +
+                    "?}} \n")
+
+            if self.state is True:
                 f.write("\\chead{\\fancyplain{}{Echec de la bobine}} \n")
-            f.write("\\rhead{\\fancyplain{}{Opérateur: \\verb?" +"{}".format(self.dicoBobine[DEFINE.OPID])+ "?}}\n")
+
+            f.write("\\rhead{\\fancyplain{}{Opérateur: \\verb?" +
+                    "{}".format(self.dicoBobine[DEFINE.OPID]) +
+                    "?}}\n")
             f.write("\\lfoot{\\fancyplain{}{\\rightmark}}\n")
             f.write("\\rfoot{\\fancyplain{}{\\thepage}}\n")
             f.write("\\section{Informations sur la bobine}\n")
             f.write("L'opération de bobinage {} avec succès le \\today.\n \n".format(' ne s\'est pas terminé' if self.state else 's\'est terminé'))
 
             prix = (5.735/1000.0)*3.14*(float(self.dicoBobine[DEFINE.LBOBINE]))*(((float(self.dicoBobine[DEFINE.DNOYAU])/2.0)+((float(self.dicoBobine[DEFINE.DFIL])/1000.0)*(float(self.dicoVariables[DEFINE.TOUR])/float(self.dicoBobine[DEFINE.LBOBINE]))))**2-(float(self.dicoBobine[DEFINE.DNOYAU])/2.0)**2)
-
             f.write("Le coût en cuivre est estimé à {} euros.\n \n \n".format(round(prix,2)))
+
             f.write("\\begin{tabular}{ll}\n")
             f.write("Statut de la bobine: & {} \\\\ \n".format('Echec' if self.state else 'Terminé'))
             f.write("Opérateur: & \\verb?{}? \\\\ \n".format(self.dicoBobine[DEFINE.OPID]))

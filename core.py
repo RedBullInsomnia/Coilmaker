@@ -32,13 +32,13 @@ class EventError(Exception):
 
 
 class Core(myThreads.Thread):
-    def __init__(self, ser, memory, event, nouvelleBobineEvent, errorEvent,
+    def __init__(self, ser, memory, event, newCoil_event, errorEvent,
                  entrees, sorties, dataLogger):
         myThreads.Thread.__init__(self)
         self.mem = memory
         self.ser = ser
         self.event = event
-        self.nouvelleBobine = nouvelleBobineEvent
+        self.nouvelleBobine = newCoil_event
         self.errorEvent = errorEvent
 
         self.In = entrees

@@ -19,7 +19,8 @@ import RPi.GPIO as GPIO
 class MainWindow(tk.Tk):
     """Classe qui va gérer la fenêtre principale.
     """
-    def __init__(self,connDown,connUp,core,dataLogger,run_event,newCoil_event,errorEvent,parent = None):
+    def __init__(self, connDown, connUp, core, dataLogger, run_event,
+                 newCoil_event, error_event, parent=None):
         """Constructeur de la fenêtre principale"""
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.debug("Initialisation de l'interface")
@@ -27,7 +28,7 @@ class MainWindow(tk.Tk):
         self.connDown = connDown
         self.runE = run_event
         self.nouvelleBobine = newCoil_event
-        self.errorEvent = errorEvent
+        self.error_event = error_event
         self.core = core
         self.bobineEnCours = False
         self.dataLogger = dataLogger
@@ -84,7 +85,7 @@ class MainWindow(tk.Tk):
         self.champ_LabelOUTPUT = []
         self.champ_VarOUTPUT = []
         for i in xrange(6):
-            self.champ_LabelOUTPUT.append(tk.Label(partOUTPUT, state=tk.DISABLED, text= DEFINE.TRANSLATE_VARIABLES[DEFINE.VARIABLES_order[i]] + " :"))
+            self.champ_LabelOUTPUT.append(tk.Label(partOUTPUT, state=tk.DISABLED, text=DEFINE.TRANSLATE_VARIABLES[DEFINE.VARIABLES_order[i]] + " :"))
             self.champ_VarOUTPUT.append(tk.Label(partOUTPUT, state=tk.DISABLED, textvariable=(self.dicoVariables)[DEFINE.VARIABLES_order[i]]))
 
         for i, champ in enumerate(self.champ_LabelOUTPUT):
@@ -112,29 +113,30 @@ class MainWindow(tk.Tk):
 
         self.GAP = tk.Entry(partORDER, width=8, textvariable=self.sGAP,
                             state=tk.DISABLED)
-        self.RPM = tk.Entry(partORDER, width=8, textvariable = self.sRPM,state = tk.DISABLED)
-        self.GAPbutton = tk.Button(partORDER, text = "valider",anchor=tk.W,width= 8, state = tk.DISABLED, command = self.updateGAP)
-        self.RPMbutton = tk.Button(partORDER, text = "valider",anchor=tk.W,width=8, state = tk.DISABLED, command = self.updateRPM)
+        self.RPM = tk.Entry(partORDER, width=8, textvariable=self.sRPM,
+                            state=tk.DISABLED)
+        self.GAPbutton = tk.Button(partORDER, text="valider", anchor=tk.W, width=8, state = tk.DISABLED, command = self.updateGAP)
+        self.RPMbutton = tk.Button(partORDER, text="valider", anchor=tk.W, width=8, state = tk.DISABLED, command = self.updateRPM)
         self.sliderGAP = tk.Scale(partORDER, from_=0, to=200, length= 500, tickinterval = 50,orient=tk.HORIZONTAL,state= tk.DISABLED, command = self.getGAP)
         self.sliderRPM = tk.Scale(partORDER, from_=0, to=120, length= 500, tickinterval = 15,bigincrement= 15, orient=tk.HORIZONTAL,state= tk.DISABLED, command = self.getRPM)
 
-        self.boutonSTOP.grid(row = 0, column = 0)
-        self.boutonSTART.grid(row = 0, column = 1)
-        self.boutonLED.grid(row = 3, column = 0)
-        self.boutonHALT.grid(row = 3, column = 1)
-        self.sliderGAPlabel.grid(row = 1, column = 0)
-        self.sliderRPMlabel.grid(row = 2, column = 0)
-        self.sliderGAP.grid(row = 1, column = 1)
+        self.boutonSTOP.grid(row=0, column=0)
+        self.boutonSTART.grid(row=0, column = 1)
+        self.boutonLED.grid(row=3, column = 0)
+        self.boutonHALT.grid(row=3, column = 1)
+        self.sliderGAPlabel.grid(row=1, column = 0)
+        self.sliderRPMlabel.grid(row=2, column = 0)
+        self.sliderGAP.grid(row=1, column = 1)
         self.sliderRPM.grid(row = 2, column = 1)
         self.GAP.grid(row = 1, column = 3)
         self.RPM.grid(row = 2, column = 3)
-        self.GAPbutton.grid(row = 1, column = 4)
-        self.RPMbutton.grid(row = 2, column = 4)
+        self.GAPbutton.grid(row=1, column=4)
+        self.RPMbutton.grid(row=2, column=4)
 
-        partH.pack(expand = 1, fill = tk.BOTH,side = tk.TOP)
-        partL.pack(expand = 1, fill = tk.BOTH,side = tk.BOTTOM)
+        partH.pack(expand=1, fill=tk.BOTH, side=tk.TOP)
+        partL.pack(expand=1, fill =tk.BOTH, side =tk.BOTTOM)
 
-        partDATA.pack(expand = 1, fill = tk.BOTH,side = tk.LEFT)
+        partDATA.pack(expand=1, fill=tk.BOTH, side=tk.LEFT)
         partOUTPUT.pack(expand = 1, fill = tk.BOTH,side = tk.RIGHT)
         partORDER.pack(expand = 1, fill = tk.BOTH,side = tk.BOTTOM)
 
@@ -147,13 +149,13 @@ class MainWindow(tk.Tk):
         coilmenu.add_command(label="Quitter", command=self.quit)
         menubar.add_cascade(label="Bobine", menu=coilmenu)
         helpmenu = tk.Menu(menubar, tearoff=0)
-        helpmenu.add_command(label="A propos de...", command=self.aProposDe)
+        helpmenu.add_command(label="A propos de...", command=self.about)
         menubar.add_cascade(label="Help", menu=helpmenu)
         self.config(menu=menubar)
-        self.logger.info("Interface Chargée")
+        self.logger.info("Interface chargée")
 
-    def aProposDe(self):
-        message ="""Ce programme a été écrit par Nathan Maquet
+    def about(self):
+        message = """Ce programme a été écrit par Nathan Maquet
         Ce programme fait partie du TFE:
         "Conception et réalisation d'une bobineuse automatique de précision"
         """
@@ -265,17 +267,17 @@ class MainWindow(tk.Tk):
 
     def periodiccall(self):  # On vérifie 25 fois par seconde
         self.checkupdate()
-        if ((not self.nouvelleBobine.isSet()) and (self.bobineEnCours) and not self.errorEvent.isSet()):
+        if ((not self.nouvelleBobine.isSet()) and (self.bobineEnCours) and not self.error_event.isSet()):
             self.bobineEnCours = False
             tkMessageBox.showinfo(
                 message='La bobine est terminée !',
                 icon='info',
                 title='Bobinage de la bobine : Succès')
-        if (self.errorEvent.isSet()):
+        if (self.error_event.isSet()):
             tkMessageBox.showerror('ERREUR !', 'Une erreur est survenue !')
             self.dataLogger.event('Une erreur est survenue !')
             self.bobineEnCours = False
-            self.errorEvent.clear()
+            self.error_event.clear()
 
         self.after(40, self.periodiccall)
 

@@ -3,10 +3,10 @@
 """Fichier 'core'. Contient le coeur du projet"""
 import Queue
 import os
-import myThreads
+from myThreads import Thread
 import time
 import iFunctions as iF
-import report
+from report import PdfLatex
 try:
     import cPickle as pickle
 except:
@@ -31,15 +31,15 @@ class EventError(Exception):
         return repr(self.value)
 
 
-class Core(myThreads.Thread):
-    def __init__(self, ser, memory, event, newCoil_event, errorEvent,
+class Core(Thread):
+    def __init__(self, ser, memory, event, newCoil_event, error_event,
                  entrees, sorties, dataLogger):
-        myThreads.Thread.__init__(self)
+        Thread.__init__(self)
         self.mem = memory
         self.ser = ser
         self.event = event
-        self.nouvelleBobine = newCoil_event
-        self.errorEvent = errorEvent
+        self.newCoil = newCoil_event
+        self.error_event = error_event
 
         self.In = entrees
         self.Out = sorties
@@ -69,21 +69,25 @@ class Core(myThreads.Thread):
                 # Une bobine a été chargée
                 # Il faut attendre qu'on l'ait démarrée
                 self.variables = DEFINE.VARIABLES.copy()  # reset variables
+
                 # On fabrique la bobine
                 self.makeBobine()
-                self.nouvelleBobine.clear()
+                self.newCoil.clear()
                 self.event.clear()
+
                 # A ce stade, on a fini la bobine
                 self.bobineDemarree = False
                 self.makeRapport()
                 self.In.flush()
                 self.Out.flush()
+
                 # On se remet dans l'état "non chargé"
                 self.file = ''
                 self.error = False
 
     def makeRapport(self):
-        comp = report.PdfLatex(self.file, self.error, self.variables, self.mem.pos.couche)
+        comp = PdfLatex(self.file, self.error, self.variables,
+                        self.mem.pos.couche)
         comp.start()
 
     def makeBobine(self):
@@ -120,8 +124,8 @@ class Core(myThreads.Thread):
             RPMprec = float(self.variables[DEFINE.RPM])
             #   On va attendre d'avoir le start
             while((not self.bobineDemarree) and (not self.stop)):
-                self.nouvelleBobine.wait(1)
-                if ((self.nouvelleBobine.isSet())and(self.event.isSet())):
+                self.newCoil.wait(1)
+                if ((self.newCoil.isSet())and(self.event.isSet())):
                     self.bobineDemarree = True
 
             #   On a le start. On enregistre le début de la bobine dans tStart
@@ -146,7 +150,7 @@ class Core(myThreads.Thread):
                     self.ser.write([2, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04])
                     self.dataLogger.event("Le programme s'est terminé avec
                                           succès")
-                    # self.nouvelleBobine.clear()
+                    # self.newCoil.clear()
                     self.mem.SH.setEnable(False)
                     increment = 1
                     # self.bobineDemarree = False
@@ -157,7 +161,7 @@ class Core(myThreads.Thread):
                 correctement'''
                 if variableSortie >= 50:
                     self.bobineDemarree = False
-                    self.nouvelleBobine.clear()
+                    self.newCoil.clear()
 
                 # Ici, on entre dans la pause programmée
                 if ((int(self.mem.CT.tour) == int(NINTER)) and not pauseAlreadyHappen):
@@ -248,7 +252,6 @@ class Core(myThreads.Thread):
 
                 # Le datalogger doit être retravaillé, pour inclure toutes les mesures
                 self.dataLogger.log('{};{};{}'.format(self.mem.CT.tour, self.variables[DEFINE.VROT],self.mem.SH.sonde).replace('.', ','))
-                # f.write("{};{};{};{};{};{}\n".format(tMoyenne - tStart, vMoyenne,RPMprec, tourMoyen, AVANCEprec, hallMoyen*(5/1024.0)))
 
                 time.sleep(0.025)
 
@@ -257,9 +260,9 @@ class Core(myThreads.Thread):
         except:
             self.l.exception("Impossible d'écrire le fichier de data")
             self.dataLogger.event("[ERROR] - (boucle principale)")
-            self.errorEvent.set()
+            self.error_event.set()
             self.error = True
-            self.nouvelleBobine.clear()
+            self.newCoil.clear()
             self.bobineDemarree = False
         else:
             self.ser.write([3, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04])
@@ -269,20 +272,20 @@ class Core(myThreads.Thread):
             self.ser.write([1, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04])
 
     def startBobine(self):
-        self.nouvelleBobine.set()
+        self.newCoil.set()
         self.event.set()
 
     def EventError(self, message):
         self.error = True
-        self.nouvelleBobine.clear()
+        self.newCoil.clear()
         self.bobineDemarree = False
-        self.errorEvent.set()
+        self.error_event.set()
         self.dataLogger.event(message)
 
     def haltBobine(self):
         self.mem.SH.setEnable(False)
         self.bobineDemarree = False
-        self.nouvelleBobine.clear()
+        self.newCoil.clear()
         self.event.clear()
 
     def resumeBobine(self):
@@ -297,7 +300,7 @@ class Core(myThreads.Thread):
         except:
             print("Impossible d'ouvrir le fichier {}".format(filename+'.bobine'))
             self.l.error("Impossible d'ouvrir le fichier {}".format(filename+'.bobine'))
-            self.errorEvent.set()
+            self.error_event.set()
         else:
             self.dicoBobine = pickle.load(f)
             self.l.info('Bobine "{}" chargée'.format(filename))

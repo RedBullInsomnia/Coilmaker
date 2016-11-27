@@ -1,23 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-import myThreads
+from myThreads import Thread
 import smbus
 import time
 import iFunctions as iF
 
 
-class SondeHall(myThreads.Thread):
+class SondeHall(Thread):
     """Permet de lire la tension de la sonde de Hall, et de contrôler le moteur
     La régulation de la tension mécanique dans le fil est également gérée par
     cet objet.
     """
-    def __init__(self, ser, mem, run_event, newCoil_event, error_event):
-        myThreads.Thread.__init__(self, 'Sonde Hall')
+    def __init__(self, ser, mem, run_event):
+        Thread.__init__(self, 'Sonde Hall')
         self.run_event = run_event
-        self.newCoil = newCoil_event
-        self.error_event = error_event
         self.l.info('Initialisation du Thread - Sonde Hall')
-        self.maxRange = 1023.0
         self.mem = mem
         self.ser = ser
         self.consigne = 0

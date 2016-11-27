@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 import DEFINE
-import myThreads
+from myThreads import Thread
 import os
 try:
     import cPickle as pickle
@@ -9,10 +9,10 @@ except:
     import pickle
 
 
-class PdfLatex(myThreads.Thread):
+class PdfLatex(Thread):
     """Permet de générer le rapport automatique"""
     def __init__(self, filename, etat, dv, couche):
-        myThreads.Thread.__init__(self, 'LATEX-Gen')
+        Thread.__init__(self, 'LATEX-Gen')
         self.filename = filename
         self.state = etat
         self.dicoBobine = {}

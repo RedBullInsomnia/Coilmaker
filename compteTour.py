@@ -1,22 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-import Moteur
+from moteur import Moteur
 import time
 import RPi.GPIO as GPIO
 
 
-class CompteTour(Moteur.Moteur):
+class CompteTour(Moteur):
     """Cette classe permet de gérer le compte-tour.
         tour:           enregistre le nombre de tour effectué
         compteurRPM:    enregistre la vitesse (en tour par minutes)
     """
-    def __init__(self, ser, memory, run_event, newCoil_event, errorEvent):
-        Moteur.Moteur.__init__(self, run_event, newCoil_event, 'Compte-tour')
+    def __init__(self, ser, memory, run_event, newCoil_event):
+        Moteur.__init__(self, run_event, newCoil_event, 'Compte-tour')
         self.ser = ser
         self.mem = memory
-        self.run_event = run_event
-        self.nouvelleBobine = newCoil_event
-        self.errorEvent = errorEvent
 
         #   nombre de tour déjà effectué
         self.tour = 0

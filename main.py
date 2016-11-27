@@ -13,6 +13,7 @@ import mem
 import iFunctions as iF
 from myDataRecord import dataRecord
 from compteTour import CompteTour
+from sondeHall import SondeHall
 import ThreadsConnector as TC
 import Interface as intfc
 import core
@@ -55,7 +56,7 @@ if __name__ == '__main__':
     mwOut = TC.ThreadsConnector()
     mwIn = TC.ThreadsConnector()
 
-    rootLogger.info('Création des évenements')
+    rootLogger.info('Création des événements')
     run_event = threading.Event()
     newCoil_event = threading.Event()
     error_event = threading.Event()
@@ -64,9 +65,8 @@ if __name__ == '__main__':
     gMem = mem.Mem()
 
     p = mouvement.Position(ser, gMem, run_event, newCoil_event, error_event)
-    sonde = SH.SondeHall(ser, gMem, run_event, newCoil_event, error_event)
-    CT = compteTour.CompteTour(ser, gMem, run_event, newCoil_event,
-                               error_event)
+    sonde = SondeHall(ser, gMem, run_event)
+    CT = CompteTour(ser, gMem, run_event, newCoil_event)
     core = core.Core(ser, gMem, run_event, newCoil_event, error_event, mwOut,
                      mwIn, dataLogger)
     gMem.setPos(p)

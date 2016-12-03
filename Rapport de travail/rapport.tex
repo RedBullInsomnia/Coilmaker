@@ -1,0 +1,67 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=red,      
+    urlcolor=blue,
+}
+\usepackage{url}
+
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\author{Hubert Woszczyk, Guillaume Lempereur}
+\title{Rapport d'activité sur la bobineuse}
+
+
+\begin{document}
+\maketitle
+\section*{Introduction}
+Ce rapport clôture les travaux faisant partie du contrat entre N-HiTec et Gérald Colson concernant la modification d'un système de bobineuse. Il comporte une section qui résume les modifications effectuées et une section qui comporte des pistes d'améliorations futures pour la bobineuse.
+ 
+\section{Modifications effectuées}
+\subsection{Modifications du circuit imprimé}
+\begin{itemize}\itemsep=6pt
+\item Enlèvement du microprocesseur PIC , rendu superflu par l'utilisation d'une unique ligne RS232 pour contrôler les 3 moteurs. Les moteurs sont maintenant contrôlé presque directement par le Raspberry Pi, par l'intermédiaire d'un circuit intégré d'interface(MAX232). Seul 1 moteur dispose de la ligne RX.
+\item Ajout d'un convertisseur analogique-numérique(MCP3221A5T-I/OT) entre la sonde de hall et le Raspberry Pi, pour que ce dernier puisse lire les valeurs renvoyées par la sonde sur une de ses entrées numériques. 
+\item Simplification du régulateur de tension alimentant quelques composants en 5V: remplacé montage avec régulateur à découpage par un régulateur de tension à chute faible (IDX25001).
+\item Ces modifications ont permis de réduire les dimensions du circuit imprimé de manière significative ($10cm \times 8cm$ à $6,5 cm\times 5,5 cm$).
+\item La schématique du circuit a été rendue plus lisible.
+\end{itemize}
+
+\subsection{Modifications du code Python}
+\begin{itemize}\itemsep=6pt
+\item Ajouté gestion du protocole I2C pour la lecture des valeurs lues par la sonde de Hall.
+\item Adapté code de contrôle des moteurs pour refléter les modifications du circuit imprimé (contrôle direct des moteurs par le Raspberry Pi).
+\item Corrigé quelques bogues apparents.
+\item Rendu le code un peu plus lisible.
+\end{itemize}
+
+\section{Améliorations suggérées}
+\subsection{Bobineuse}
+\begin{itemize}\itemsep=6pt
+\item Le codeur de position pourrait être placé directement sur le moteur actionnant pour profiter du rapport de transmission pour doubler la résolution sur la position de la bobine.
+\item La petite carte pré-trouée collée au codeur de position devrait recevoir un cache.
+\end{itemize}
+
+
+\subsection{Circuit imprimé}
+\begin{itemize}\itemsep=6pt
+\item Remplacer le circuit intégré d'interface TTL/RS232(MAX232) par un MAX3221 (transceiver RS232) et un MAX399 (multiplexeur analogique)\footnote{\url{https://www.maximintegrated.com/en/app-notes/index.mvp/id/588}} pour avoir la possibilité d'obtenir une réponse de chacun des moteurs. 
+\end{itemize}
+
+\subsection{Code Python}
+\begin{itemize}\itemsep=6pt
+\item Appliquer le styleguide de Python (flake8 ou pep8).
+\item Suppression des messages latex lors de la génération du rapport final.
+\item Gestion de la LED à proximité de la sonde de Hall.
+\item Gestion du "power good" mis à disposition sur la pin GPIO4.
+\end{itemize}
+\end{document}

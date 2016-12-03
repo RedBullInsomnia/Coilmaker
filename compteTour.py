@@ -57,6 +57,7 @@ class CompteTour(Moteur):
             self.l.error("Code de Gray inconnu: {},{},{}".format(GPIO.input(16), GPIO.input(20),GPIO.input(21)))
             return 0
 
+    # gray2bin is intended to replace the algorithm of def position(self)
     def bin2int(bits):
         'From binary bits, msb at index 0 to integer'
         i = 0
@@ -91,7 +92,7 @@ class CompteTour(Moteur):
         if self.s1 < self.s0:
             self.s1 = self.s1 + 8
 
-        self.tour = self.tour + ((self.s1 - self.s0)*(1/8.0))
+        self.tour = self.tour + (self.s1 - self.s0) * (1 / 8.0)
         if (self.tour - self.tourPrec) > 0.5:
             self.t1 = time.time()
             dp = self.tour - self.tourPrec
@@ -100,8 +101,8 @@ class CompteTour(Moteur):
             self.t0 = self.t1
 
             #   On exclu les outsiders
-            if (dp/dt)*60 < 135:
-                self.rpm = (dp/dt)*60
+            if (dp / dt * 60) < 135:
+                self.rpm = (dp / dt) * 60
             else:
                 self.rpm = 135
 

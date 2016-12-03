@@ -40,8 +40,7 @@ class SondeHall(Thread):
             tmp = bus.read_word_data(DEVICE_ADDRESS, 0)
             x1 = tmp >> 8
             x2 = (tmp % 256) << 8
-            tmpSonde = x2 + x1
-            self.sonde = tmpSonde
+            self.sonde = x2 + x1
             self.consigne = (self.sonde - init) * 8
 
             if self.consigne > - 750:

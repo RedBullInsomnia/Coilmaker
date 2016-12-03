@@ -71,13 +71,13 @@ class Core(Thread):
                 self.variables = DEFINE.VARIABLES.copy()  # reset variables
 
                 # On fabrique la bobine
-                self.makeBobine()
+                self.makeCoil()
                 self.newCoil.clear()
                 self.event.clear()
 
                 # A ce stade, on a fini la bobine
                 self.bobineDemarree = False
-                self.makeRapport()
+                self.makeReport()
                 self.In.flush()
                 self.Out.flush()
 
@@ -85,12 +85,12 @@ class Core(Thread):
                 self.file = ''
                 self.error = False
 
-    def makeRapport(self):
+    def makeReport(self):
         comp = PdfLatex(self.file, self.error, self.variables,
                         self.mem.pos.couche)
         comp.start()
 
-    def makeBobine(self):
+    def makeCoil(self):
         try:
             #   Début de la phase d'initialisation de la procédure
             f = open('RAPPORT/{}.csv'.format(self.file), 'w')
@@ -123,9 +123,9 @@ class Core(Thread):
             AVANCEprec = float(self.variables[DEFINE.AVANCE])
             RPMprec = float(self.variables[DEFINE.RPM])
             #   On va attendre d'avoir le start
-            while((not self.bobineDemarree) and (not self.stop)):
+            while not self.bobineDemarree and not self.stop:
                 self.newCoil.wait(1)
-                if ((self.newCoil.isSet())and(self.event.isSet())):
+                if self.newCoil.isSet() and self.event.isSet():
                     self.bobineDemarree = True
 
             #   On a le start. On enregistre le début de la bobine dans tStart
@@ -147,13 +147,16 @@ class Core(Thread):
                 if ((int(self.mem.CT.tour) >= int(NTOURS)) and 0 == increment):
                     # Condition d'arrêt
                     self.l.debug('On a fini la bobine')
-                    self.ser.write([2, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04])
+                    self.ser.write([0x01, 0x03, 0x00, 0x00,
+                                    0x00, 0x00, 0x00, 0x00])
+                    self.ser.write([0x02, 0x03, 0x00, 0x00,
+                                    0x00, 0x00, 0x00, 0x00])
+                    self.ser.write([0x03, 0x03, 0x00, 0x00,
+                                    0x00, 0x00, 0x00, 0x00])
                     self.dataLogger.event("Le programme s'est terminé avec"
                                           "succès")
-                    # self.newCoil.clear()
                     self.mem.SH.setEnable(False)
                     increment = 1
-                    # self.bobineDemarree = False
 
                 variableSortie += increment
 
@@ -166,8 +169,14 @@ class Core(Thread):
                 # Ici, on entre dans la pause programmée
                 if ((int(self.mem.CT.tour) == int(NINTER)) and not pauseAlreadyHappen):
                     self.l.debug('On doit mettre la bobine en pause')
-                    self.ser.write([2, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04])
-                    self.dataLogger.event("Mise en pause automatique de la bobine")
+                    self.ser.write([0x01, 0x03, 0x00, 0x00,
+                                    0x00, 0x00, 0x00, 0x00])
+                    self.ser.write([0x02, 0x03, 0x00, 0x00,
+                                    0x00, 0x00, 0x00, 0x00])
+                    self.ser.write([0x03, 0x03, 0x00, 0x00,
+                                    0x00, 0x00, 0x00, 0x00])
+                    self.dataLogger.event("Mise en pause automatique de la"
+                                          "bobine")
                     self.write(DEFINE.MW, (DEFINE.CORE, "PAUSE"))
                     pauseAlreadyHappen = True
                     time.sleep(1.0)
@@ -175,7 +184,12 @@ class Core(Thread):
                 if (not self.event.isSet() and not self.enPause):
                     # On se met en pause
                     self.enPause = True
-                    self.ser.write([2, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04])
+                    self.ser.write([0x01, 0x03, 0x00, 0x00,
+                                    0x00, 0x00, 0x00, 0x00])
+                    self.ser.write([0x02, 0x03, 0x00, 0x00,
+                                    0x00, 0x00, 0x00, 0x00])
+                    self.ser.write([0x03, 0x03, 0x00, 0x00,
+                                    0x00, 0x00, 0x00, 0x00])
                     chronoTempsPause = time.time()
                     saveRPM = float(self.variables[DEFINE.RPM])
 
@@ -190,7 +204,9 @@ class Core(Thread):
                     # On sort de pause
                     self.enPause = False
                     self.variables[DEFINE.RPM] = float(saveRPM)
-                    tab = [2, 1, 0, 0, 0, 0, int(float(saveRPM)*(2047/120.0)/256.0),int(float(saveRPM)*(2047/120.0)%256)]
+                    tab = [2, 0x01, 0x00, 0x00, 0x00, 0x00,
+                           int(float(saveRPM) * (2047 / 120.0) / 256.0),
+                           int(float(saveRPM) * (2047 / 120.0) % 256)]
                     self.ser.write(tab)
                     tStop = tStop + (time.time() - chronoTempsPause)
 
@@ -200,7 +216,8 @@ class Core(Thread):
                 self.variables[DEFINE.TOUR] = self.mem.CT.tour
                 self.variables[DEFINE.TTOTAL] = time.time() - tStart
                 self.variables[DEFINE.TCUMUL] = tcumul
-                self.variables[DEFINE.AVANCEMENT] = round(((self.mem.CT.tour)*100/(float(NTOURS))),2)
+                progress = self.mem.CT.tour * 100 / float(NTOURS)
+                self.variables[DEFINE.AVANCEMENT] = round(progress, 2)
                 self.variables[DEFINE.VROT] = self.mem.CT.rpm
 
                 if (moyenneCourte == sizeMCourte):

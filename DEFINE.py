@@ -2,15 +2,32 @@
 # -*- coding: UTF-8 -*-
 #   Contient tous les noms de variables
 
-#   Méta-données pour les différents modules
-MOTEUR1 = 'moteur1'
+
+"""Protocol informations"""
+# Motor adresses
+mot_1 = 0x01
+mot_2 = 0x02
+mot_3 = 0x03
+
+# Protocol commands
+ROR = 0x01  # rotate right
+ROL = 0x02  # rotate left
+MST = 0x03  # stop motor
+MVP = 0x04
+SAP = 0x05
+GAP = 0x06  # get axis params
+STOP = 0x28  # STOP program execution
+
+# Axis paramaters
+AP_currentPos = 0x01
+AP_decay = 0x203
+AP_stall = 0x205
+
+# Méta-données pour les différents modules
 HALL = 'sondeHall'
-MOTEUR2 = 'moteur2'
 POSITION = 'PositionSensor'
-MOTEUR3 = 'moteur3'
 CT = 'compteTour'
 MW = 'mw'
-
 CORE = 'noyau'
 
 #   Noms de paramètres

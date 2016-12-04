@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 import time
-import DEFINE
+import DEFINE as df
 from moteur import Moteur
 
 
@@ -23,18 +23,18 @@ class Position(Moteur):
         #   2 = aller
 
     def configure(self):
-        mess = [1, 6, 1, 0, 0, 0, 0, 0]
-        resp = self.ser.readWrite(mess)
+        msg = [df.mot_1, df.GAP, 1, 0, 0, 0, 0, 0]
+        resp = self.ser.readWrite(msg)
         print("respyyy: ", resp)
-        self.startPos = resp[4]*256**3 + resp[5]*256**2 + resp[6]*256 + resp[7]
+        self.startPos = self.bytesToInt(resp[4:8])
         self.stopPos = self.computeStopPos(self.startPos)
         print("stopposyyy: ", self.stopPos)
         time.sleep(0.1)
 
         #  Moving speed is 1,2 * DFIL, by default
         movingSpeed = self.computeMovingSpeed()
-	mess = [1, 5, 4, 0] + self.convToBytes(movingSpeed)
-        self.ser.write(mess)
+        msg = [df.mot_1, df.SAP, 4, 0] + self.intToBytes(movingSpeed)
+        self.ser.write(msg)
         time.sleep(0.1)
         self.l.info("Moteur de translation configuré")
         self.direction = 2
@@ -42,18 +42,18 @@ class Position(Moteur):
 
     def computeStopPos(self, startPos):
         coil_length = float(str(
-            self.mem.core.dicoBobine[DEFINE.LBOBINE]).replace(',', '.'))
-        return int(startPos + coil_length*1000*63.952)
+            self.mem.core.dicoBobine[df.LBOBINE]).replace(',', '.'))
+        return int(startPos + coil_length * 1000 * 63.952)
 
     def computeMovingSpeed(self):
-        return int(0.2*float(str(self.mem.core.dicoBobine[DEFINE.DFIL]).
+        return int(0.2 * float(str(self.mem.core.dicoBobine[df.DFIL]).
                    replace(',', '.')) * 2.047)
 
     def preBoucle(self):
-        mess = [1, 4, 0, 0] + self.convToBytes(self.stopPos)
+        mess = [df.mot_1, df.MVP, 0x00, 0x00] + self.intToBytes(self.stopPos)
         print("messy:", mess)
-        print("Start pos: {}".format(self.convToBytes(self.startPos)))
-        print("Stop pos: {}".format(self.convToBytes(self.stopPos)))
+        print("Start pos: {}".format(self.intToBytes(self.startPos)))
+        print("Stop pos: {}".format(self.intToBytes(self.stopPos)))
         self.ser.write(mess)
         self.couche = 1
         time.sleep(0.5)
@@ -62,49 +62,49 @@ class Position(Moteur):
         if self.enPause:
             self.enPause = False
             if self.direction == 1:
-                mess = [1, 4, 0, 0] + self.convToBytes(self.startPos)
-                self.ser.write(mess)
+                msg = [df.mot_1, df.MVP, 0, 0] + self.intToBytes(self.startPos)
+                self.ser.write(msg)
             else:
-                mess = [1, 4, 0, 0] + self.convToBytes(self.stopPos)
-                self.ser.write(mess)
+                msg = [df.mot_1, df.MVP, 0, 0] + self.intToBytes(self.stopPos)
+                self.ser.write(msg)
             time.sleep(0.5)
 
         time.sleep(0.2)
-        mess = [1, 6, 3, 0, 0, 0, 0, 0]
+        mess = [df.mot_1, df.GAP, 3, 0, 0, 0, 0, 0]
         resp = self.ser.readWrite(mess)
         if resp[0:9] == [0, 2, 1, 100, 6, 0, 0, 0, 0]:
-            mess = [1, 6, 1, 0, 0, 0, 0, 0]
+            mess = [df.mot_1, df.GAP, 1, 0, 0, 0, 0, 0]
             resp = self.ser.readWrite(mess)
             print("resp:", resp)
             if 1 == self.direction:
                 self.direction = 2
-                mess = [1, 4, 0, 0] + self.convToBytes(self.stopPos)
+                mess = [df.mot_1, df.MVP, 0, 0] + self.intToBytes(self.stopPos)
                 self.ser.write(mess)
                 self.couche += 1
             else:
                 self.direction = 1
-                mess = [1, 4, 0, 0] + self.convToBytes(self.startPos)
+                mess = [df.mot_1, df.MVP, 0, 0] + self.intToBytes(self.startPos)
                 self.ser.write(mess)
                 self.couche += 1
         time.sleep(0.1)
 
     def pause(self):
         if not self.enPause:
-            msg = [1, 3, 0, 0, 0, 0, 0, 0]
+            msg = [df.mot_1, df.MST, 0, 0, 0, 0, 0, 0]
             self.ser.write(msg)
         self.enPause = True
         time.sleep(0.1)
 
     def postBoucle(self):
-        msg = [1, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+        msg = [df.mot_1, df.MST, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         self.ser.write(msg)
         time.sleep(0.1)
-        mess = [1, 5, 4, 0] + self.convToBytes(1000)
+        mess = [df.mot_1, df.SAP, 4, 0] + self.intToBytes(1000)
         self.ser.write(mess)
         self.direction = 0
         self.configurate = False
 
-    def convToBytes(self, integer):
+    def intToBytes(self, integer):
         """Converts an unsigned integer into an array of 4 bytes, in a big-endian
            fashion. Used to send the number of µsteps to the servos.
             arguments :
@@ -123,3 +123,15 @@ class Position(Moteur):
         _bytes[3] = integer
 
         return _bytes
+
+    def bytesToInt(self, bytes):
+        """Converts an array of 4 bytes into an integer, in a big-endian
+           fashion.
+            arguments :
+                - bytes : an array of 4 bytes
+
+            returns integer
+        """
+        ans = bytes[0]*256**3 + bytes[1]*256**2 + bytes[2]*256 + bytes[3]
+
+        return ans

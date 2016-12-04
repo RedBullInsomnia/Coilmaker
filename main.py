@@ -82,29 +82,29 @@ if __name__ == '__main__':
     rootLogger.debug('Stall Detection actif')
     print("Mise à zéro machine")
 
-    msg = [1, 28, 203, 0, 0, 0, 7, 255]
+    msg = [df.mot_1, df.STOP, 203, 0, 0, 0, 7, 255]
     ser.write(msg)
     time.sleep(0.1)
 
     loop = True
     while loop:
-        msg = [1, 28, 0, 0, 0, 0, 0, 40]
+        msg = [df.mot_1, df.STOP, 0, 0, 0, 0, 0, 40]
         resp = ser.readWrite(msg)
         print("resp : ", resp)
         if resp[4:8] == [0, 0, 0, 40]:
             loop = False
         time.sleep(1)
 
-    msg = [1, 5, 205, 0, 0, 0, 0, 0]
+    msg = [df.mot_1, df.SAP, df.AP_stall, 0, 0, 0, 0, 0]
     ser.write(msg)
     time.sleep(0.1)
-    msg = [1, 5, 203, 0, 0, 0, 0, 0]
+    msg = [df.mot_1, df.SAP, df.AP_decay, 0, 0, 0, 0, 0]
     ser.write(msg)
     time.sleep(0.1)
-    msg = [1, 5, 1, 0, 0, 0x7F, 0xFF, 0xFF]
+    msg = [df.mot_1, df.SAP, df.AP_currentPos, 0, 0, 0x7F, 0xFF, 0xFF]
     ser.write(msg)
     time.sleep(0.1)
-    msg = [1, 4, 0, 0, 0, 0x7F, 0x00, 0x00]
+    msg = [df.mot_1, df.MVP, 0, 0, 0, 0x7F, 0x00, 0x00]
     ser.write(msg)
     rootLogger.debug('Stall Detection actif')
     rootLogger.info('Fin de la mise à zéro moteur')

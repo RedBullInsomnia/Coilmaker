@@ -6,11 +6,8 @@ import threading
 
 import RPi.GPIO as GPIO
 
-import random
 import time
-
 import mem
-import iFunctions as iF
 from myDataRecord import dataRecord
 from compteTour import CompteTour
 from sondeHall import SondeHall
@@ -18,9 +15,8 @@ import ThreadsConnector as TC
 import Interface as intfc
 import core
 import mySerial
-import sondeHall as SH
 import mouvement
-import DEFINE
+import DEFINE as df
 
 
 if __name__ == '__main__':

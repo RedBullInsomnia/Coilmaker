@@ -19,7 +19,11 @@ GAP = 0x06  # get axis params
 STOP = 0x28  # STOP program execution
 
 # Axis paramaters
+AP_targetPos = 0x00
 AP_currentPos = 0x01
+AP_targetSpeed = 0x02
+AP_rpm = 0x03
+AP_maxPosSpped = 0x04
 AP_decay = 0x203
 AP_stall = 0x205
 

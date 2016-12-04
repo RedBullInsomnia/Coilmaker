@@ -50,11 +50,11 @@ class Position(Moteur):
                    replace(',', '.')) * 2.047)
 
     def preBoucle(self):
-        mess = [df.mot_1, df.MVP, 0x00, 0x00] + self.intToBytes(self.stopPos)
-        print("messy:", mess)
+        msg = [df.mot_1, df.MVP, 0x00, 0x00] + self.intToBytes(self.stopPos)
+        print("msgy:", msg)
         print("Start pos: {}".format(self.intToBytes(self.startPos)))
         print("Stop pos: {}".format(self.intToBytes(self.stopPos)))
-        self.ser.write(mess)
+        self.ser.write(msg)
         self.couche = 1
         time.sleep(0.5)
 
@@ -70,21 +70,21 @@ class Position(Moteur):
             time.sleep(0.5)
 
         time.sleep(0.2)
-        mess = [df.mot_1, df.GAP, 3, 0, 0, 0, 0, 0]
-        resp = self.ser.readWrite(mess)
+        msg = [df.mot_1, df.GAP, df.AP_rpm, 0, 0, 0, 0, 0]
+        resp = self.ser.readWrite(msg)
         if resp[0:9] == [0, 2, 1, 100, 6, 0, 0, 0, 0]:
-            mess = [df.mot_1, df.GAP, 1, 0, 0, 0, 0, 0]
-            resp = self.ser.readWrite(mess)
+            msg = [df.mot_1, df.GAP, 1, 0, 0, 0, 0, 0]
+            resp = self.ser.readWrite(msg)
             print("resp:", resp)
             if 1 == self.direction:
                 self.direction = 2
-                mess = [df.mot_1, df.MVP, 0, 0] + self.intToBytes(self.stopPos)
-                self.ser.write(mess)
+                msg = [df.mot_1, df.MVP, 0, 0] + self.intToBytes(self.stopPos)
+                self.ser.write(msg)
                 self.couche += 1
             else:
                 self.direction = 1
-                mess = [df.mot_1, df.MVP, 0, 0] + self.intToBytes(self.startPos)
-                self.ser.write(mess)
+                msg = [df.mot_1, df.MVP, 0, 0] + self.intToBytes(self.startPos)
+                self.ser.write(msg)
                 self.couche += 1
         time.sleep(0.1)
 
@@ -99,8 +99,8 @@ class Position(Moteur):
         msg = [df.mot_1, df.MST, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
         self.ser.write(msg)
         time.sleep(0.1)
-        mess = [df.mot_1, df.SAP, 4, 0] + self.intToBytes(1000)
-        self.ser.write(mess)
+        msg = [df.mot_1, df.SAP, df.AP_maxPosSpped, 0] + self.intToBytes(1000)
+        self.ser.write(msg)
         self.direction = 0
         self.configurate = False
 

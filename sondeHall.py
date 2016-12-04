@@ -3,7 +3,7 @@
 from myThreads import Thread
 import smbus
 import time
-import iFunctions as iF
+import DEFINE as df
 
 
 class SondeHall(Thread):
@@ -45,12 +45,12 @@ class SondeHall(Thread):
 
             if self.consigne > - 750:
                 if (self.consigne > 16):
-                    array = [3, 0x01, 0x00, 0x00, 0x00, 0x00,
+                    array = [df.mot_3, df.ROR, 0x00, 0x00, 0x00, 0x00,
                              int(int(self.consigne) / 256),
                              int(int(self.consigne) % 256)]
                     self.ser.write(array)
                 else:
-                    array = [3, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+                    array = [df.mot_3, df.MST, 0, 0, 0, 0, 0, 0]
                     self.ser.write(array)
                 self.erreurSonde = 0
             else:
@@ -59,7 +59,7 @@ class SondeHall(Thread):
             if (self.erreurSonde > 5) and (not self.errorRise) and self.run_event and self.enable:
                 self.mem.core.EventError("Casse du fil !")
                 self.errorRise = True
-                msg = [3, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
+                msg = [df.mot_3, df.MST, 0, 0, 0, 0, 0, 0]
                 self.ser.write(msg)
 
             time.sleep(0.1)

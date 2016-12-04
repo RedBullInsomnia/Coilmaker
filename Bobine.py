@@ -3,7 +3,7 @@
 import Tkinter as tk
 import os
 import logging
-import DEFINE
+import DEFINE as df
 import iFunctions as iF
 try:
     import cPickle as pickle
@@ -29,14 +29,14 @@ class wBobine(tk.Toplevel):
 
         self.champ_LabelDATA = []
         self.champ_VarDATA = []
-        self.INFO = DEFINE.dBOBINE.copy()
+        self.INFO = df.dBOBINE.copy()
         self.dicoBobine = {}
-        for clef, valeur in (DEFINE.dBOBINE).items():
+        for clef, valeur in (df.dBOBINE).items():
             (self.dicoBobine)[clef] = tk.StringVar()
 
-        for i in DEFINE.BOBINE_order:
+        for i in df.BOBINE_order:
             self.champ_LabelDATA.append(tk.Label(partDATA,
-                                        text=DEFINE.TRANSLATE_BOBINE[i] + " :")
+                                        text=df.TRANSLATE_BOBINE[i] + " :")
                                         )
             self.champ_VarDATA.append(tk.Entry(partDATA, width=16,
                                       textvariable=(self.dicoBobine)[i]))
@@ -76,10 +76,10 @@ class wBobine(tk.Toplevel):
                               format(str((self.IDbobine).get())))
         else:
             for i in self.vecteur09:
-                var = DEFINE.BOBINE_order[i]
+                var = df.BOBINE_order[i]
                 self.INFO[var] = (self.champ_VarDATA[i]).get()
-                if self.champ_VarDATA[DEFINE.BOBINE_order.index(DEFINE.NINTERRUPT)].get() == "":
-                    self.INFO[DEFINE.NINTERRUPT] = -1
+                if self.champ_VarDATA[df.BOBINE_order.index(df.NINTERRUPT)].get() == "":
+                    self.INFO[df.NINTERRUPT] = -1
             pickle.dump(self.INFO, f)
             self.logger.info("Bobine {} créer".format(str((self.IDbobine).get())))
             f.close()

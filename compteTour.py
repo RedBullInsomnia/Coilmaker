@@ -15,7 +15,7 @@ class CompteTour(Moteur):
         self.ser = ser
         self.mem = memory
 
-        #   nombre de tour déjà effectué
+        #   nombre de tours déjà effectués
         self.tour = 0
         GPIO.setup(16, GPIO.IN)
         GPIO.setup(20, GPIO.IN)
@@ -54,7 +54,8 @@ class CompteTour(Moteur):
             return 1
         else:
             print("[ERROR - code de Gray inconnu]")
-            self.l.error("Code de Gray inconnu: {},{},{}".format(GPIO.input(16), GPIO.input(20),GPIO.input(21)))
+            self.l.error("Code de Gray inconnu: {},{},{}".format(
+                         GPIO.input(16), GPIO.input(20), GPIO.input(21)))
             return 0
 
     # gray2bin is intended to replace the algorithm of def position(self)
